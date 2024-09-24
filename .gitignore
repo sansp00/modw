@@ -1,0 +1,30 @@
+<<<<<<< HEAD
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+bin/
+
+# Eclipse m2e generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.project
+.classpath
+.settings/
+=======
+.project
+.settings/
+.idea/
+.classpath
+.factorypath
+target/
+bin/
+>>>>>>> 639f9c1 (first compile)

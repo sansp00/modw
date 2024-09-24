@@ -39,7 +39,7 @@ under the License.
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven_proguard-maven-plugin.version>2.6.1</maven_proguard-maven-plugin.version>
 		<maven_git-commit-id-maven-plugin.version>5.0.0</maven_git-commit-id-maven-plugin.version>
-		<maven3Version>3.9.6</maven3Version>
+		<maven3Version>3.9.9</maven3Version>
 		<wiremock.version>3.9.1</wiremock.version>
 		<resolver.version>1.9.20</resolver.version>
 		<system-lambda.version>1.2.1</system-lambda.version>

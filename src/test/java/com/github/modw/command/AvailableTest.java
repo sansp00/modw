@@ -1,38 +1,38 @@
-package io.moderne.wrapper.cli.command;
+package com.github.modw.command;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
-
+import com.github.modw.CommandTestFixture;
 import org.junit.jupiter.api.Test;
 
+import com.github.modw.Configuration;
 import com.github.tomakehurst.wiremock.WireMockServer;
 
-import io.moderne.wrapper.cli.ModConfiguration;
+class AvailableTest implements CommandTestFixture {
 
-class ModDownloadTest implements TestModWFixture {
-
-	ModConfiguration modConfiguration;
+	Configuration modConfiguration;
 
 	@Test
 	void execute() throws Exception {
-		final ModDownload command = new ModDownload(modConfiguration, Optional.empty());
-
+		final Available command = new Available(modConfiguration);
 		final String out = tapSystemOut(() -> {
 			command.execute();
 		});
 
-		assertThat(modConfiguration.repoPath()).isDirectoryRecursivelyContaining("glob:**lombok-1.18.34.jar");
+		command.execute();
+		assertThat(out).contains("1.18.34");
 	}
 
 	@Override
-	public void offer(final ModConfiguration modConfiguration) {
+	public void offer(Configuration modConfiguration) {
 		this.modConfiguration = modConfiguration;
 	}
 
 	@Override
 	public void offer(WireMockServer wireMockServer) {
-		// NoOp
+		// TODO Auto-generated method stub
+
 	}
+
 }

@@ -1,15 +1,11 @@
-package io.moderne.wrapper.cli;
+package com.github.modw;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.maven.artifact.repository.metadata.Versioning;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
@@ -52,9 +48,9 @@ public class MavenRepository {
 		final DefaultMetadata mavenMetaDataXml = new DefaultMetadata(artifact.getGroupId(), artifact.getArtifactId(),
 				MAVEN_METADATA_XML, Metadata.Nature.RELEASE);
 
-		repositories.stream().forEach(repository -> {
+		repositories.forEach(repository -> {
 			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
-					Arrays.asList(new MetadataRequest(mavenMetaDataXml, repository, ""))));
+                    Collections.singletonList(new MetadataRequest(mavenMetaDataXml, repository, ""))));
 		});
 
 		metadataResults.forEach(metadataResult -> {
@@ -79,9 +75,9 @@ public class MavenRepository {
 		final DefaultMetadata mavenMetaDataXml = new DefaultMetadata(artifact.getGroupId(), artifact.getArtifactId(),
 				MAVEN_METADATA_XML, Metadata.Nature.RELEASE);
 
-		repositories.stream().forEach(repository -> {
+		repositories.forEach(repository -> {
 			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
-					Arrays.asList(new MetadataRequest(mavenMetaDataXml, repository, ""))));
+                    Collections.singletonList(new MetadataRequest(mavenMetaDataXml, repository, ""))));
 		});
 
 		metadataResults.forEach(metadataResult -> {
@@ -110,11 +106,11 @@ public class MavenRepository {
 		return new DefaultArtifact(String.format("%s:%s:%s", groupId, artifactId, version));
 	}
 
-	public static RemoteRepository getRepository(final String id, final String type, final String url) {
-		return new RemoteRepository.Builder(id, type, url).build();
-	}
-
-	public static RemoteRepository getCentralMavenRepository() {
-		return getRepository("central", "default", "https://repo1.maven.org/maven2/");
-	}
+//	public static RemoteRepository getRepository(final String id, final String type, final String url) {
+//		return new RemoteRepository.Builder(id, type, url).build();
+//	}
+//
+//	public static RemoteRepository getCentralMavenRepository() {
+//		return new RemoteRepository.Builder("central", "default", "https://repo1.maven.org/maven2/").build();
+//	}
 }

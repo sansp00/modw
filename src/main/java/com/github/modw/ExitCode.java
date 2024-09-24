@@ -1,4 +1,4 @@
-package io.moderne.wrapper.cli;
+package com.github.modw;
 
 import java.util.Arrays;
 

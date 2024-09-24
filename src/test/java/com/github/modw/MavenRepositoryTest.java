@@ -1,4 +1,4 @@
-package io.moderne.wrapper.cli;
+package com.github.modw;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

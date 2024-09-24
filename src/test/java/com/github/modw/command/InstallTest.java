@@ -1,4 +1,4 @@
-package io.moderne.wrapper.cli.command;
+package com.github.modw.command;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -6,26 +6,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
+import com.github.modw.CommandTestFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.github.modw.Configuration;
 import com.github.tomakehurst.wiremock.WireMockServer;
 
-import io.moderne.wrapper.cli.ModConfiguration;
+class InstallTest implements CommandTestFixture {
 
-class ModInstallTest implements TestModWFixture {
-
-	ModConfiguration modConfiguration;
+	Configuration modConfiguration;
 
 	@Test
 	void execute(@TempDir Path artifactPath) throws Exception {
 		final Path artifact = Paths.get(artifactPath.toString(), "artifact.jar");
 		Files.createFile(artifact);
 
-		final ModInstall command = new ModInstall(modConfiguration, artifact.toFile(), "TEST");
+		final Install command = new Install(modConfiguration, artifact.toFile(), "TEST");
 
 		final String out = tapSystemOut(() -> {
 			command.execute();
@@ -35,7 +33,7 @@ class ModInstallTest implements TestModWFixture {
 	}
 
 	@Override
-	public void offer(ModConfiguration modConfiguration) {
+	public void offer(Configuration modConfiguration) {
 		this.modConfiguration = modConfiguration;
 	}
 

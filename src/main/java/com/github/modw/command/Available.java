@@ -30,7 +30,7 @@ public class Available implements Command {
         new MavenRepository(configuration.repoPath())
             .resolveVersion(cliArtifact, Collections.singletonList(cliRepository));
     System.out.println("Available versions:");
-    versions.forEach(
+    versions.stream().sorted().forEach(
         version -> {
           System.out.printf("- %s%n", version);
         });

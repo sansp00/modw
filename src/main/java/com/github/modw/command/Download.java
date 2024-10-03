@@ -44,7 +44,7 @@ public class Download implements Command {
 
     } catch (ArtifactResolutionException e) {
       System.out.println("Artifact unresolved");
-      System.out.printf("Error: %s%n", e.toString());
+      System.out.printf("Error: %s%n", e);
       return ExitCode.GENERAL_ERROR.value();
     }
     return ExitCode.OK.value();

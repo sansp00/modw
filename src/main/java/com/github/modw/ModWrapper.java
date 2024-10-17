@@ -38,7 +38,7 @@ public class ModWrapper {
                 Option.builder("available").desc("display the available Moderne CLI versions").build();
         final Option cleanOption =
                 Option.builder("clean").desc("delete the local Moderne CLI versions").build();
-        final Option informationOption = Option.builder("info").desc("Wrapper information").build();
+        final Option informationOption = Option.builder("version").desc("Wrapper version information").build();
 
         options.addOption(availableOption);
         options.addOption(generateOption);
@@ -94,7 +94,7 @@ public class ModWrapper {
             } else if (cmd.hasOption(informationOption)) {
                 System.out.println("modw information");
                 System.out.printf(
-                        "-version: %s%n-built: %s%n",
+                        "- version: %s%n- built: %s%n",
                         buildProperties.getVersion(), buildProperties.getBuildTime());
             } else {
                 // Run (and download to local repository if necessary) the cli

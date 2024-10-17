@@ -5,6 +5,7 @@
 @REM JAVA_HOME - location of a JDK home dir
 @REM ----------------------------------------------------------------------------
 
+@echo off
 
 @REM ==== JAVA_HOME VALIDATION ====
 if not "%JAVA_HOME%" == "" goto HasJavaHome

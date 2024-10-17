@@ -90,6 +90,23 @@ public class MavenRepository {
 		return versions;
 	}
 
+	public Set<String> installed(final Artifact artifact, final List<RemoteRepository> repositories) {
+		final List<MetadataResult> metadataResults = new ArrayList<>();
+		final Set<String> versions = new HashSet<>();
+		final DefaultMetadata mavenMetaDataXml = new DefaultMetadata(artifact.getGroupId(), artifact.getArtifactId(),
+				MAVEN_METADATA_XML, Metadata.Nature.RELEASE);
+
+		repositories.forEach(repository -> {
+			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
+					Collections.singletonList(new MetadataRequest(mavenMetaDataXml, repository, ""))));
+		});
+
+		metadataResults.forEach(metadataResult -> {
+			versions.add(metadataResult.getMetadata().getVersion());
+		});
+		return versions;
+	}
+
 	public void installArtifact(final Artifact artifact, final List<RemoteRepository> repositories)
 			throws InstallationException {
 		repositorySystem.install(repositorySystemSession, new InstallRequest().setArtifacts(Arrays.asList(artifact)));

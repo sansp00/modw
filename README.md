@@ -68,15 +68,16 @@ Until the project provides a proper packaging ...
 ---
 `modw -help`
 > usage: Command line syntax: <br>
--available   display the available Moderne CLI versions <br>
--clean       delete the local Moderne CLI versions <br>
--download    download Moderne CLI locally <br>
--f           Moderne CLI file (works with -install) <br>
--generate    generate an example Moderne CLI wrapper configuration <br>
--help        display the Wrapper usages <br>
--install     install Moderne CLI <br>
--v           Moderne CLI version (works with -download and run) <br>
--version     Wrapper version <br>
+-available     display the available Moderne CLI versions<br>
+-clean         delete the local Moderne CLI versions<br>
+-download      download Moderne CLI locally<br>
+-f <file>      Moderne CLI file (works with -install)<br>
+-generate      generate an example Moderne CLI wrapper configuration<br>
+-help          display the Wrapper usages<br>
+-install       install Moderne CLI<br>
+-installed     display the installed Moderne CLI versions<br>
+-v <version>   Moderne CLI version (works with -download and run)<br>
+-version       Wrapper version information<br>
 
 
 ## Build Instructions

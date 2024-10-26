@@ -68,6 +68,8 @@ public class MavenRepository {
 			session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session,
 					new LocalRepository(repositoryPath.toString())));
 			session.setOffline(offline);
+			session.setRepositoryListener(new LoggingRepositoryListener());
+			session.setTransferListener(new LoggingTransferListener());
 			return (RepositorySystemSession) session;
 		};
 	}
@@ -82,7 +84,6 @@ public class MavenRepository {
 		final Set<String> versions = new HashSet<>();
 		final DefaultMetadata mavenMetaDataXml = new DefaultMetadata(artifact.getGroupId(), artifact.getArtifactId(),
 				MAVEN_METADATA_XML, Metadata.Nature.RELEASE);
-
 		repositories.forEach(repository -> {
 			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
 					Collections.singletonList(new MetadataRequest(mavenMetaDataXml, repository, ""))));

@@ -31,4 +31,4 @@ goto error
 
 :init
 
-"%JAVA_HOME%\bin\java.exe" -jar %~dp0modw-@project.version@d project-pg.jar %*
+"%JAVA_HOME%\bin\java.exe" -jar %~dp0modw-@project.version@-pg.jar %*

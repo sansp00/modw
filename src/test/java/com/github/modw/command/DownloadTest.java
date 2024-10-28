@@ -23,6 +23,7 @@ class DownloadTest implements CommandTestFixture {
 			command.execute();
 		});
 
+		System.out.println(out);
 		assertThat(modConfiguration.repoPath()).isDirectoryRecursivelyContaining("glob:**lombok-1.18.34.jar");
 	}
 

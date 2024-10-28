@@ -21,6 +21,7 @@ class AvailableTest implements CommandTestFixture {
 		});
 
 		command.execute();
+		System.out.println(out);
 		assertThat(out).contains("1.18.34");
 	}
 

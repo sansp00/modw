@@ -18,7 +18,7 @@ public class Available implements Command {
 
 	@Override
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [available]");
+		System.out.println("Executing command [available]");
 
 		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
 

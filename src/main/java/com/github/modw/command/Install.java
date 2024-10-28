@@ -22,7 +22,7 @@ public class Install implements Command {
 	}
 
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [install]");
+		System.out.println("Executing command [install]");
 		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
 
 		final Artifact cliArtifact = MavenRepository

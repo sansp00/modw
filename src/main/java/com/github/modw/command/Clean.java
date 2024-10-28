@@ -17,7 +17,7 @@ public class Clean implements Command {
 	}
 
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [clean]");
+		System.out.println("Executing command [clean]");
 		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
 
 		final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),

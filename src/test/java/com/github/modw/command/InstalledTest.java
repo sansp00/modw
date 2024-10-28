@@ -39,6 +39,7 @@ class InstalledTest implements CommandTestFixture {
 			command.execute();
 		});
 
+		System.out.println(out);
 		assertThat(modConfiguration.repoPath()).isDirectoryRecursivelyContaining("glob:**lombok-[1,2].0.0.jar");
 		assertThat(out).contains("1.0.0", "2.0.0");
 	}

@@ -27,7 +27,7 @@ public class Run implements Command {
 	// java -jar /path/to/mod.jar "$@"
 
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [run]");
+		System.out.println("Executing command [run]");
 		final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),
 				configuration.getCliArtifactId(), cliVersion.orElse(configuration.getCliVersion()));
 		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
@@ -44,7 +44,7 @@ public class Run implements Command {
 			commandLine.addAll(Arrays.asList(args));
 
 			final ProcessBuilder processBuilder = new ProcessBuilder(commandLine); // .inheritIO();
-			System.out.println("--> Invoking " + commandLine.stream().collect(Collectors.joining()));
+			System.out.printf("Running (%s)%n%n", commandLine.stream().collect(Collectors.joining(" ")));
 			final Process process = processBuilder.start();
 			System.out.println(new String(IOUtils.toByteArray(process.getInputStream())));
 			System.err.println(new String(IOUtils.toByteArray(process.getErrorStream())));

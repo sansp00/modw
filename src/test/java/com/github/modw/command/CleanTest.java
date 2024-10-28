@@ -39,6 +39,7 @@ class CleanTest implements CommandTestFixture {
 			command.execute();
 		});
 
+		System.out.println(out);
 		assertThat(modConfiguration.repoPath()).isDirectoryRecursivelyContaining("glob:**lombok-2.0.0.jar");
 		assertThat(modConfiguration.repoPath()).isDirectoryNotContaining("glob:**lombok-1.0.0.jar");
 		assertThat(out).contains("1.0.0");

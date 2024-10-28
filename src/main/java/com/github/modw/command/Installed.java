@@ -18,7 +18,7 @@ public class Installed implements Command {
 
 	@Override
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [installed]");
+		System.out.println("Executing command [installed]");
 		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
 
 		final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),

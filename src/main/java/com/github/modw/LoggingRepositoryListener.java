@@ -19,12 +19,10 @@ public class LoggingRepositoryListener implements RepositoryListener {
 
 	@Override
 	public void artifactResolving(RepositoryEvent event) {
-		System.out.printf("---> resolving artifact %s%n", event.getArtifact());
 	}
 
 	@Override
 	public void artifactResolved(RepositoryEvent event) {
-		System.out.printf("---> resolved artifact %s%n", event.getArtifact());
 	}
 
 	@Override
@@ -37,12 +35,10 @@ public class LoggingRepositoryListener implements RepositoryListener {
 
 	@Override
 	public void artifactDownloading(RepositoryEvent event) {
-		System.out.printf("---> downloading artifact %s%n", event.getArtifact());
 	}
 
 	@Override
 	public void artifactDownloaded(RepositoryEvent event) {
-		System.out.printf("---> downloaded artifact %s%n", event.getArtifact());
 	}
 
 	@Override
@@ -55,12 +51,10 @@ public class LoggingRepositoryListener implements RepositoryListener {
 
 	@Override
 	public void artifactInstalling(RepositoryEvent event) {
-		System.out.printf("---> installing artifact %s%n", event.getArtifact());
 	}
 
 	@Override
 	public void artifactInstalled(RepositoryEvent event) {
-		System.out.printf("---> installed artifact %s%n", event.getArtifact());
 	}
 
 	@Override

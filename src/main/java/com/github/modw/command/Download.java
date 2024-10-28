@@ -21,7 +21,7 @@ public class Download implements Command {
 	}
 
 	public int execute(final String... args) {
-		System.out.println("-> Executing command [download]");
+		System.out.println("Executing command [download]");
 		try {
 			final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),
 					configuration.getCliArtifactId(), cliVersion.orElse(configuration.getCliVersion()));
@@ -31,7 +31,7 @@ public class Download implements Command {
 			final Artifact resolved = new MavenRepository(configuration.repoPath()).resolveArtifact(cliArtifact,
 					Collections.singletonList(cliRepository));
 
-			System.out.printf("Artifact resolved (GAV => file): %s:%s:%s => %s%n", resolved.getGroupId(),
+			System.out.printf("Artifact resolved/downloaded %s:%s:%s => %s%n", resolved.getGroupId(),
 					resolved.getArtifactId(), resolved.getVersion(), resolved.getFile());
 
 		} catch (ArtifactResolutionException e) {

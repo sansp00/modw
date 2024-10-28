@@ -24,6 +24,7 @@ class RunTest implements CommandTestFixture {
 		final String out = tapSystemErrAndOut(() -> {
 			assertThat(command.execute("-version")).isEqualTo(ExitCode.OK.value());
 		});
+		System.out.println(out);
 		assertThat(out).contains("v1.18.34 \"Envious Ferret\"");
 	}
 

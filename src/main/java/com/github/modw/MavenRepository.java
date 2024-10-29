@@ -68,7 +68,6 @@ public class MavenRepository {
 			session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session,
 					new LocalRepository(repositoryPath.toString())));
 			session.setOffline(offline);
-			session.setRepositoryListener(new LoggingRepositoryListener());
 			session.setTransferListener(new LoggingTransferListener());
 			return (RepositorySystemSession) session;
 		};

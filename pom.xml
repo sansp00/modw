@@ -187,7 +187,7 @@ under the License.
 							<goal>proguard</goal>
 						</goals>
 						<phase>package</phase>
-						<configuration>
+						<configuration>ns>
 							<includeDependency>false</includeDependency>
 							<obfuscate>false</obfuscate>
 							<injar>
@@ -196,20 +196,23 @@ under the License.
 							<!--
                             <silent>true</silent>
                             -->
+                            <inLibsFilter>!META-INF/services/**</inLibsFilter>
 							<libs>
 								<lib>${java.home}/jmods/java.base.jmod</lib>
 							</libs>
 							<options>
+								<option>-keep class org.slf4j.nop.** { *; }</option>
 								<option>-keep public class
 									com.github.modw.ModWrapper {public
 									static void main(java.lang.String[]);}</option>
 								<option>-dontwarn</option>
 								<option>-keepattributes InnerClasses</option>
-								<option>-keepclassmembers class * extends java.lang.Enum {
-            						&lt;fields&gt;;
-            						public static **[] values();
-            						public static ** valueOf(java.lang.String);
-        							}</option>
+								<option>-keepclassmembers class * extends
+									java.lang.Enum {
+									&lt;fields&gt;;
+									public static **[] values();
+									public static ** valueOf(java.lang.String);
+									}</option>
 								<option>-keepclassmembers enum * {
 									public static **[] values();
 									public static ** valueOf(java.lang.String);

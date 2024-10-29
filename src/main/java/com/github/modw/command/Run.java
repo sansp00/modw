@@ -44,7 +44,7 @@ public class Run implements Command {
 			commandLine.addAll(Arrays.asList(args));
 
 			final ProcessBuilder processBuilder = new ProcessBuilder(commandLine); // .inheritIO();
-			System.out.printf("Running (%s)%n%n", commandLine.stream().collect(Collectors.joining(" ")));
+			System.out.printf("Running '%s'%n%n", commandLine.stream().collect(Collectors.joining(" ")));
 			final Process process = processBuilder.start();
 			System.out.println(new String(IOUtils.toByteArray(process.getInputStream())));
 			System.err.println(new String(IOUtils.toByteArray(process.getErrorStream())));

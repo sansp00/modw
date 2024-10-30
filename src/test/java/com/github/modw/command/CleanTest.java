@@ -17,8 +17,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.github.modw.CommandTestFixture;
 import com.github.modw.Configuration;
-import com.github.modw.MavenRepository;
-import com.github.modw.RemoteRepositoryFactory;
+import com.github.modw.maven.MavenRepository;
+import com.github.modw.maven.RemoteRepositoryFactory;
 import com.github.tomakehurst.wiremock.WireMockServer;
 
 class CleanTest implements CommandTestFixture {

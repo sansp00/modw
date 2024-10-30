@@ -1,16 +1,14 @@
-package com.github.modw;
+package com.github.modw.maven;
 
 import org.eclipse.aether.transfer.TransferCancelledException;
 import org.eclipse.aether.transfer.TransferEvent;
 import org.eclipse.aether.transfer.TransferListener;
 
+import com.github.modw.Spinner;
+
 public class LoggingTransferListener implements TransferListener {
-	
+
 	final Spinner spinner = new Spinner();
-	
-	public LoggingTransferListener() {
-		
-	}
 
 	@Override
 	public void transferInitiated(TransferEvent event) throws TransferCancelledException {

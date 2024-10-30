@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.github.modw.*;
+import com.github.modw.maven.MavenRepository;
+import com.github.modw.maven.RemoteRepositoryFactory;
+
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 

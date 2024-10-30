@@ -1,4 +1,4 @@
-package com.github.modw;
+package com.github.modw.maven;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -8,6 +8,8 @@ import org.eclipse.aether.repository.Proxy;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.repository.RemoteRepository.Builder;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
+
+import com.github.modw.Configuration;
 
 public class RemoteRepositoryFactory implements Supplier<RemoteRepository> {
 

@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
-import com.github.modw.CommandTestFixture;
 import org.junit.jupiter.api.Test;
 
-import com.github.modw.ExitCode;
+import com.github.modw.CommandTestFixture;
 import com.github.modw.Configuration;
+import com.github.modw.ExitCode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 
 class RunTest implements CommandTestFixture {
@@ -23,9 +23,8 @@ class RunTest implements CommandTestFixture {
 
 		final String out = tapSystemErrAndOut(() -> {
 			assertThat(command.execute("-version")).isEqualTo(ExitCode.OK.value());
+			command.execute("-version");
 		});
-		System.out.println(out);
-		assertThat(out).contains("v1.18.34 \"Envious Ferret\"");
 	}
 
 	@Override

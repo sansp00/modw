@@ -3,14 +3,22 @@ package com.github.modw.command;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.github.modw.*;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
+
+import com.github.modw.Command;
+import com.github.modw.Configuration;
+import com.github.modw.ExitCode;
+import com.github.modw.maven.MavenRepository;
+import com.github.modw.maven.RemoteRepositoryFactory;
 
 public class Run implements Command {
 
@@ -43,11 +51,8 @@ public class Run implements Command {
 			commandLine.add(resolved.getFile().getAbsolutePath());
 			commandLine.addAll(Arrays.asList(args));
 
-			final ProcessBuilder processBuilder = new ProcessBuilder(commandLine); // .inheritIO();
 			System.out.printf("Running '%s'%n%n", commandLine.stream().collect(Collectors.joining(" ")));
-			final Process process = processBuilder.start();
-			System.out.println(new String(IOUtils.toByteArray(process.getInputStream())));
-			System.err.println(new String(IOUtils.toByteArray(process.getErrorStream())));
+			final Process process = new ProcessBuilder(commandLine).inheritIO().start();
 			return process.waitFor();
 		} catch (ArtifactResolutionException e) {
 			return ExitCode.GENERAL_ERROR.value();

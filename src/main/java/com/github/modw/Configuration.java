@@ -1,17 +1,17 @@
 package com.github.modw;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * modw configuration properties 
+ * modw configuration properties
  */
 public interface Configuration {
 	static final String MODW_PATH = ".modw";
 	static final String REPO_PATH = "repo";
 
 	static final String PROPERTIES_FILENAME = "modw.properties";
-
 
 	default Path modwPath() {
 		return Paths.get(System.getProperty("user.home"), MODW_PATH);
@@ -30,12 +30,22 @@ public interface Configuration {
 	}
 
 	public String generate();
+	
+	public void save() throws IOException;
 
 	public String getCliGroupId();
 
 	public String getCliArtifactId();
 
 	public String getCliVersion();
+
+	public String getWrapperGroupId();
+
+	public String getWrapperArtifactId();
+
+	public String getWrapperVersion();
+
+	public String getWrapperQualifier();
 
 	public String getRepositoryId();
 
@@ -56,5 +66,7 @@ public interface Configuration {
 	public String getProxyUsername();
 
 	public String getProxyPassword();
+	
+	public String updateWrapperVersion(final String version);
 
 }

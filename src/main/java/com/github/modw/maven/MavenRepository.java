@@ -237,5 +237,9 @@ public class MavenRepository {
 	public static Artifact getArtifact(final String groupId, final String artifactId, final String version) {
 		return new DefaultArtifact(String.format("%s:%s:%s", groupId, artifactId, version));
 	}
+	
+	public static Artifact getArtifact(final String groupId, final String artifactId, final String version, String extension, String qualifier) {
+		return new DefaultArtifact(String.format("%s:%s:%s:%s:%s", groupId, artifactId, extension, qualifier, version));
+	}
 
 }

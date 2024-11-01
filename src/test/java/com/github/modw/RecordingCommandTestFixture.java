@@ -17,111 +17,141 @@ import static com.github.modw.ConfigurationProperties.*;
 @TestInstance(Lifecycle.PER_CLASS)
 public interface RecordingCommandTestFixture {
 
-  void offer(final Configuration modConfiguration);
+	void offer(final Configuration modConfiguration);
 
-  void offer(final WireMockServer wireMockServer);
+	void offer(final WireMockServer wireMockServer);
 
-  static final WireMockServer wireMockServer =
-      new WireMockServer(
-          WireMockConfiguration.options().usingFilesUnderDirectory("src/test/resources"));
+	static final WireMockServer wireMockServer = new WireMockServer(
+			WireMockConfiguration.options().usingFilesUnderDirectory("src/test/resources"));
 
-  @BeforeAll
-  default void setup(@TempDir Path modwPath) throws IOException {
-    wireMockServer.start();
-    wireMockServer.startRecording("https://repo1.maven.org/maven2");
+	@BeforeAll
+	default void setup(@TempDir Path modwPath) throws IOException {
+		wireMockServer.start();
+		wireMockServer.startRecording("https://repo1.maven.org/maven2");
 
-    final Configuration configuration =
-        new Configuration() {
+		final Configuration configuration = new Configuration() {
 
-          public Path modwPath() {
-            return modwPath;
-          }
+			public Path modwPath() {
+				return modwPath;
+			}
 
-          @Override
-          public String generate() {
-            return "";
-          }
+			@Override
+			public String generate() {
+				return "";
+			}
 
-          @Override
-          public String getCliGroupId() {
-            return "org.projectlombok";
-          }
+			@Override
+			public String getCliGroupId() {
+				return "org.projectlombok";
+			}
 
-          @Override
-          public String getCliArtifactId() {
-            return "lombok";
-          }
+			@Override
+			public String getCliArtifactId() {
+				return "lombok";
+			}
 
-          @Override
-          public String getCliVersion() {
-            return CLI_VERSION_DEFAULT;
-          }
+			@Override
+			public String getCliVersion() {
+				return CLI_VERSION_DEFAULT;
+			}
 
-          @Override
-          public String getRepositoryId() {
-            return REPOSITORY_ID_DEFAULT;
-          }
+			@Override
+			public String getRepositoryId() {
+				return REPOSITORY_ID_DEFAULT;
+			}
 
-          @Override
-          public String getRepositoryType() {
-            return REPOSITORY_TYPE_DEFAULT;
-          }
+			@Override
+			public String getRepositoryType() {
+				return REPOSITORY_TYPE_DEFAULT;
+			}
 
-          @Override
-          public String getRepositoryUrl() {
-            return wireMockServer.baseUrl();
-          }
+			@Override
+			public String getRepositoryUrl() {
+				return wireMockServer.baseUrl();
+			}
 
-          @Override
-          public String getRepositoryUsername() {
-            return null;
-          }
+			@Override
+			public String getRepositoryUsername() {
+				return null;
+			}
 
-          @Override
-          public String getRepositoryPassword() {
-            return null;
-          }
+			@Override
+			public String getRepositoryPassword() {
+				return null;
+			}
 
-          @Override
-          public String getProxyType() {
-            return null;
-          }
+			@Override
+			public String getProxyType() {
+				return null;
+			}
 
-          @Override
-          public String getProxyHost() {
-            return null;
-          }
+			@Override
+			public String getProxyHost() {
+				return null;
+			}
 
-          @Override
-          public int getProxyPort() {
-            return PROXY_PORT_DEFAULT;
-          }
+			@Override
+			public int getProxyPort() {
+				return PROXY_PORT_DEFAULT;
+			}
 
-          @Override
-          public String getProxyUsername() {
-            return null;
-          }
+			@Override
+			public String getProxyUsername() {
+				return null;
+			}
 
-          @Override
-          public String getProxyPassword() {
-            return null;
-          }
-        };
+			@Override
+			public String getProxyPassword() {
+				return null;
+			}
 
-    if (!configuration.modwPath().toFile().exists()) {
-      PathUtils.createParentDirectories(configuration.modwPath());
-    }
-    if (!configuration.repoPath().toFile().exists()) {
-      PathUtils.createParentDirectories(configuration.repoPath());
-    }
+			@Override
+			public String getWrapperGroupId() {
+				return "com.github.modw";
+			}
 
-    offer(configuration);
-    offer(wireMockServer);
-  }
+			@Override
+			public String getWrapperArtifactId() {
+				return "modw";
+			}
 
-  @AfterAll
-  default void teardown() {
-    wireMockServer.stopRecording();
-    wireMockServer.stop();
-  }
+			@Override
+			public String getWrapperVersion() {
+
+				return "RELEASE";
+			}
+
+			@Override
+			public String getWrapperQualifier() {
+
+				return "pg";
+			}
+
+			@Override
+			public String updateWrapperVersion(String version) {
+				return version;
+			}
+
+			@Override
+			public void save() {
+
+			}
+		};
+
+		if (!configuration.modwPath().toFile().exists()) {
+			PathUtils.createParentDirectories(configuration.modwPath());
+		}
+		if (!configuration.repoPath().toFile().exists()) {
+			PathUtils.createParentDirectories(configuration.repoPath());
+		}
+
+		offer(configuration);
+		offer(wireMockServer);
+	}
+
+	@AfterAll
+	default void teardown() {
+		wireMockServer.stopRecording();
+		wireMockServer.stop();
+	}
 }

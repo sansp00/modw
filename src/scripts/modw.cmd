@@ -58,7 +58,7 @@ set "WRAPPER_REPO_PATH=%MODW_USER_HOME%\repo\%ARTIFACT_REPO_PATH%\%ARTIFACTID%-%
 if exist "%WRAPPER_REPO_PATH%" (
   set "WRAPPER_JAR_PATH=%WRAPPER_REPO_PATH%"
 ) else (
-  set "WRAPPER_JAR_PATH=%MODW_HOME%modw-0.0.1-SNAPSHOT-pg.jar"
+  set "WRAPPER_JAR_PATH=%MODW_HOME%modw-@project.version@-pg.jar"
 )
 
 echo "Running with wrapper %WRAPPER_JAR_PATH%" >&2

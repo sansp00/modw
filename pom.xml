@@ -22,12 +22,16 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.modw</groupId>
+	<groupId>com.github.sansp00.modw</groupId>
 	<artifactId>modw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Moderne CLI wrapper</name>
 	<description>Moderne CLI wrapper to ease version management.</description>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/sansp00/modw.git</developerConnection>
+	</scm>
 
 	<properties>
 		<assertj.version>3.26.3</assertj.version>
@@ -43,6 +47,7 @@ under the License.
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven_proguard-maven-plugin.version>2.6.1</maven_proguard-maven-plugin.version>
 		<maven_git-commit-id-maven-plugin.version>9.0.1</maven_git-commit-id-maven-plugin.version>
+		<maven-release-plugin.version>3.1.1</maven-release-plugin.version>
 		<maven3Version>3.9.9</maven3Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wiremock.version>3.9.1</wiremock.version>
@@ -316,7 +321,11 @@ under the License.
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${maven-release-plugin.version}</version>
+			</plugin>
 
 		</plugins>
 

@@ -5,76 +5,78 @@
 @REM JAVA_HOME - location of a JDK home dir
 @REM ----------------------------------------------------------------------------
 
-@echo off
-
+@ECHO off
 
 @REM ==== JAVA_HOME VALIDATION ====
 IF NOT "%JAVA_HOME%" == "" GOTO HasJavaHome
 
-echo. >&2
-echo Error: JAVA_HOME not found in your environment. >&2
-echo Please set the JAVA_HOME variable in your environment to match the >&2
-echo location of your Java installation. >&2
-echo. >&2
+ECHO. >&2
+ECHO Error: JAVA_HOME not found in your environment. >&2
+ECHO Please SET the JAVA_HOME variable in your environment to match the >&2
+ECHO location of your Java installation. >&2
+ECHO. >&2
 GOTO error
 
 :HasJavaHome
-IF exist "%JAVA_HOME%\bin\java.exe" GOTO ReadProperties
+IF EXIST "%JAVA_HOME%\bin\java.exe" (
+    SET "JAVACMD="%JAVA_HOME%/bin/java""
+    GOTO ReadProperties
+)
 
-echo. >&2
-echo Error: JAVA_HOME is set to an invalid directory. >&2
-echo JAVA_HOME = "%JAVA_HOME%" >&2
-echo Please set the JAVA_HOME variable in your environment to match the >&2
-echo location of your Java installation. >&2
-echo. >&2
+ECHO. >&2
+ECHO Error: JAVA_HOME is SET to an invalid directory. >&2
+ECHO JAVA_HOME = "%JAVA_HOME%" >&2
+ECHO Please SET the JAVA_HOME variable in your environment to match the >&2
+ECHO location of your Java installation. >&2
+ECHO. >&2
 GOTO error
 @REM ==== END JAVA_HOME VALIDATION ====
 
 :ReadProperties
-set "MODW_HOME=%~dp0"
-set "MODW_USER_HOME=%HOMEDRIVE%%HOMEPATH%\.modw"
-set "WRAPPER_REPO_PATH="
+SET "MODW_HOME=%~dp0"
+SET "MODW_USER_HOME=%HOMEDRIVE%%HOMEPATH%\.modw"
+SET "WRAPPER_REPO_PATH="
 
-IF not exist "%MODW_USER_HOME%\modw.properties" ( 
+IF NOT EXIST "%MODW_USER_HOME%\modw.properties" (
 	GOTO ExecuteWrapper
 )
 
 CALL :getValueOf "wrapper.groupId"
-set "GROUPID=%value%"
+SET "GROUPID=%value%"
 
 CALL :getValueOf "wrapper.artifactId"
-set "ARTIFACTID=%value%"
+SET "ARTIFACTID=%value%"
 
 CALL :getValueOf "wrapper.version"
-set "VERSION=%value%"
+SET "VERSION=%value%"
 
 CALL :getValueOf "wrapper.qualifier"
-set "QUALIFIER=%value%"
+SET "QUALIFIER=%value%"
 
-set "ARTIFACT_REPO_PATH=%GROUPID:.=/%"
-set "WRAPPER_REPO_PATH=%MODW_USER_HOME%\repo\%ARTIFACT_REPO_PATH%\%ARTIFACTID%-%VERSION%-%QUALIFIER%.jar"
+SET "ARTIFACT_REPO_PATH=%GROUPID:.=/%"
+SET "WRAPPER_REPO_PATH=%MODW_USER_HOME%\repo\%ARTIFACT_REPO_PATH%\%ARTIFACTID%-%VERSION%-%QUALIFIER%.jar"
 
 :ExecuteWrapper
-if exist "%WRAPPER_REPO_PATH%" (
-  set "WRAPPER_JAR_PATH=%WRAPPER_REPO_PATH%"
-) else (
-  set "WRAPPER_JAR_PATH=%MODW_HOME%modw-@project.version@-pg.jar"
+IF EXIST "%WRAPPER_REPO_PATH%" (
+  SET "WRAPPER_JAR_PATH=%WRAPPER_REPO_PATH%"
+) ELSE (
+  SET "WRAPPER_JAR_PATH=%MODW_HOME%modw-@project.version@-pg.jar"
 )
 
-echo "Running with wrapper %WRAPPER_JAR_PATH%" >&2
-%JAVA_HOME%\bin\java.exe -jar "%WRAPPER_JAR_PATH%" %*
+ECHO "Running with wrapper %WRAPPER_JAR_PATH%" >&2
+%JAVACMD% -jar "%WRAPPER_JAR_PATH%" %*
 
 :getValueOf
-setlocal enabledelayedexpansion
-set "key=%~1"
-set "modwProperties=%MODW_USER_HOME%\modw.properties"
+SETLOCAL enabledelayedexpansion
+SET "value="
+SET "key=%~1"
+SET "modwProperties=%MODW_USER_HOME%\modw.properties"
 FOR /f "tokens=1,2 delims==" %%a IN (!modwProperties!) DO (
     IF "%%a"=="!key!" (
-        set "value=%%b"
-		endlocal
-		exit /b
+        SET "value=%%b"
+		ENDLOCAL
+		EXIT /b
     )
 )
-set "value="
 endlocal
-exit /b 
+EXIT /b

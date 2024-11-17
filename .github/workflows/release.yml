@@ -21,10 +21,10 @@ jobs:
           cache: maven
       - name: Get version
         id: get_version
-        run: echo "VERSION=$( cat version.txt )" >> "$GITHUB_OUTPUT"
+        run: echo "version=$( cat version.txt )" >> "$GITHUB_OUTPUT"
       - name: Build with Maven
         env:
-          VERSION: ${{ steps.get_version.outputs.VERSION }}
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: ./mvnw -B package -Drevision=$VERSION --file pom.xml
       - name: Create Release
         id: create_release
@@ -44,6 +44,6 @@ jobs:
           VERSION: ${{ steps.get_version.outputs.VERSION }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/modw-$VERSION-distribution.zip
-          asset_name: modw-$VERSION-distribution.zip
+          asset_path: ./target/modw-${{ steps.get_version.outputs.version }}-distribution.zip
+          asset_name: modw-${{ steps.get_version.outputs.version }}-distribution.zip
           asset_content_type: application/zip

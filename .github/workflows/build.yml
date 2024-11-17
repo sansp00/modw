@@ -1,4 +1,4 @@
-name: Java CI with Maven Wrapper
+name: Build
 
 on:
   push:
@@ -8,8 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2
       - name: Set up JDK 17
+        id: setup_jdk
         uses: actions/setup-java@v4
         with:
           java-version: '17'

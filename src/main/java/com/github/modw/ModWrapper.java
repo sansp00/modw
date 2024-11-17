@@ -1,9 +1,14 @@
 package com.github.modw;
 
+import com.github.modw.command.Available;
+import com.github.modw.command.Clean;
+import com.github.modw.command.Download;
+import com.github.modw.command.Install;
+import com.github.modw.command.Installed;
+import com.github.modw.command.Run;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -12,14 +17,16 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.github.modw.command.Available;
-import com.github.modw.command.Clean;
-import com.github.modw.command.Download;
-import com.github.modw.command.Install;
-import com.github.modw.command.Installed;
-import com.github.modw.command.Run;
-
 public class ModWrapper {
+
+    final static String MODW_LOGO =
+                    "   _____  _____  ____  \n" +
+                    "  |     ||     ||    \\\n" +
+                    "  | | | ||  |  ||  |  |\n" +
+                    "  |_|_|_||_____||____/ \n" +
+                    "  | | | |              \n" +
+                    "  | | | |              \n" +
+                    "  |_____|              \n";
 
     public static void main(String[] args) {
         final Configuration configuration = new ConfigurationProperties();
@@ -108,15 +115,6 @@ public class ModWrapper {
             System.exit(ExitCode.MISUSE_OF_SHELL_BUILT_IN.value());
         }
     }
-
-    final static String MODW_LOGO =
-                    "   _____  _____  ____  \n" +
-                    "  |     ||     ||    \\\n" +
-                    "  | | | ||  |  ||  |  |\n" +
-                    "  |_|_|_||_____||____/ \n" +
-                    "  | | | |              \n" +
-                    "  | | | |              \n" +
-                    "  |_____|              \n";
 
 
 }

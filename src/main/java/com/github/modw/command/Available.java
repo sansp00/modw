@@ -11,29 +11,36 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 
 public class Available implements Command {
-	final Configuration configuration;
-	final RemoteRepositoryFactory remoteRepositorySupplier;
+  final Configuration configuration;
+  final RemoteRepositoryFactory remoteRepositorySupplier;
 
-	public Available(final Configuration configuration) {
-		this.configuration = configuration;
-		this.remoteRepositorySupplier = new RemoteRepositoryFactory(configuration);
-	}
+  public Available(final Configuration configuration) {
+    this.configuration = configuration;
+    this.remoteRepositorySupplier = new RemoteRepositoryFactory(configuration);
+  }
 
-	@Override
-	public int execute(final String... args) {
-		System.out.println("Executing command [available]");
+  @Override
+  public int execute(final String... args) {
+    System.out.println("Executing command [available]");
 
-		final RemoteRepository cliRepository = remoteRepositorySupplier.get();
+    final RemoteRepository cliRepository = remoteRepositorySupplier.get();
 
-		final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),
-				configuration.getCliArtifactId(), configuration.getCliVersion());
+    final Artifact cliArtifact =
+        MavenRepository.getArtifact(
+            configuration.getCliGroupId(),
+            configuration.getCliArtifactId(),
+            configuration.getCliVersion());
 
-		final Set<String> versions = new MavenRepository(configuration.repoPath()).resolveVersion(cliArtifact,
-				Collections.singletonList(cliRepository));
-		System.out.println("Available versions:");
-		versions.stream().sorted().forEach(version -> {
-			System.out.printf("- %s%n", version);
-		});
-		return ExitCode.OK.value();
-	}
+    final Set<String> versions =
+        new MavenRepository(configuration.repoPath())
+            .resolveVersion(cliArtifact, Collections.singletonList(cliRepository));
+    System.out.println("Available versions:");
+    versions.stream()
+        .sorted()
+        .forEach(
+            version -> {
+              System.out.printf("- %s%n", version);
+            });
+    return ExitCode.OK.value();
+  }
 }

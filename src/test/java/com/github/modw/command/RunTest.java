@@ -3,14 +3,12 @@ package com.github.modw.command;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErrAndOut;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-
 import com.github.modw.CommandTestFixture;
 import com.github.modw.Configuration;
 import com.github.modw.ExitCode;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
 
 class RunTest implements CommandTestFixture {
 

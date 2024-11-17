@@ -11,29 +11,30 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 
 class AvailableTest implements CommandTestFixture {
 
-	Configuration modConfiguration;
+  Configuration modConfiguration;
 
-	@Test
-	void execute() throws Exception {
-		final Available command = new Available(modConfiguration);
-		final String out = tapSystemOut(() -> {
-			command.execute();
-		});
+  @Test
+  void execute() throws Exception {
+    final Available command = new Available(modConfiguration);
+    final String out =
+        tapSystemOut(
+            () -> {
+              command.execute();
+            });
 
-		command.execute();
-		System.out.println(out);
-		assertThat(out).contains("1.18.34");
-	}
+    command.execute();
+    System.out.println(out);
+    assertThat(out).contains("1.18.34");
+  }
 
-	@Override
-	public void offer(Configuration modConfiguration) {
-		this.modConfiguration = modConfiguration;
-	}
+  @Override
+  public void offer(Configuration modConfiguration) {
+    this.modConfiguration = modConfiguration;
+  }
 
-	@Override
-	public void offer(WireMockServer wireMockServer) {
-		// TODO Auto-generated method stub
+  @Override
+  public void offer(WireMockServer wireMockServer) {
+    // TODO Auto-generated method stub
 
-	}
-
+  }
 }

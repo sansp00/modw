@@ -1,20 +1,20 @@
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
-	<id>distribution</id>
-	<formats>
-		<format>zip</format>
-	</formats>
-	<includeBaseDirectory>false</includeBaseDirectory>
-	<fileSets>
-		<fileSet>
-			<outputDirectory>.</outputDirectory>
-			<directory>${basedir}/target</directory>
-			<includes>
-				<include>${project.artifactId}-${project.version}-pg.jar</include>
-				<include>modw.sh</include>
-				<include>modw.cmd</include>
-			</includes>
-		</fileSet>
-	</fileSets>
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>distribution</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <outputDirectory>.</outputDirectory>
+            <directory>${basedir}/target</directory>
+            <includes>
+                <include>${project.artifactId}-${project.version}-pg.jar</include>
+                <include>modw.sh</include>
+                <include>modw.cmd</include>
+            </includes>
+        </fileSet>
+    </fileSets>
 </assembly>

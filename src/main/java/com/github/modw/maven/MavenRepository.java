@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.artifact.repository.metadata.Versioning;
@@ -59,6 +59,14 @@ public class MavenRepository {
 		this.repositoryPath = repositoryPath;
 		this.repositorySystem = new RepositorySystemSupplier().get();
 		this.repositorySystemSession = repositorySystemSessionSupplier(repositorySystem, repositoryPath, offline).get();
+	}
+
+	public static Artifact getArtifact(final String groupId, final String artifactId, final String version) {
+		return new DefaultArtifact(String.format("%s:%s:%s", groupId, artifactId, version));
+	}
+
+	public static Artifact getArtifact(final String groupId, final String artifactId, final String version, String extension, String qualifier) {
+		return new DefaultArtifact(String.format("%s:%s:%s:%s:%s", groupId, artifactId, extension, qualifier, version));
 	}
 
 	Supplier<RepositorySystemSession> repositorySystemSessionSupplier(final RepositorySystem repositorySystem,
@@ -120,7 +128,8 @@ public class MavenRepository {
 	Boolean artifactExists(final Artifact artifact) {
 		final String artifactPath = repositorySystemSession.getLocalRepositoryManager()
 				.getPathForLocalArtifact(artifact);
-		final File filePath = Path.of(repositoryPath.toFile().getAbsolutePath(), artifactPath).toFile();
+
+		final File filePath = Paths.get(repositoryPath.toString(), artifactPath).toFile();
 		return filePath.exists();
 	}
 
@@ -136,20 +145,20 @@ public class MavenRepository {
 
 		final List<MetadataResult> metadataResults = new ArrayList<>();
 
-		final Function<String, Artifact> versionnedArtifact = v -> {
+		final Function<String, Artifact> versionedArtifact = v -> {
 			return getArtifact(artifact.getGroupId(), artifact.getArtifactId(), v);
 		};
 
 		final Consumer<Artifact> deleteArtifact = a -> {
 			final String artifactPath = repositorySystemSession.getLocalRepositoryManager().getPathForLocalArtifact(a);
-			FileUtils.deleteQuietly(Path.of(artifactPath).getParent().toFile());
+			FileUtils.deleteQuietly(Paths.get(artifactPath).getParent().toFile());
 		};
 
 		final Consumer<Artifact> collect = a -> {
 			versions.add(a.getVersion());
 		};
 
-		final Predicate<Artifact> artifactExists = a -> artifactExists(a);
+		final Predicate<Artifact> artifactExists = this::artifactExists;
 
 		repositories.forEach(repository -> {
 			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
@@ -158,7 +167,7 @@ public class MavenRepository {
 
 		metadataResults.stream().map(MetadataResult::getMetadata).forEach(metadata -> {
 			versioning(metadata.getFile()).ifPresent(versioning -> {
-				versioning.getVersions().stream().map(versionnedArtifact).filter(artifactExists)
+				versioning.getVersions().stream().map(versionedArtifact).filter(artifactExists)
 						.filter(a -> !StringUtils.equals(a.getVersion(), versioning.getRelease()))
 						.forEach(deleteArtifact.andThen(collect));
 
@@ -169,7 +178,7 @@ public class MavenRepository {
 				.find(repositorySystemSession, new LocalMetadataRequest(mavenMetaDataXml, null, ""));
 
 		versioning(localMetadataResult.getFile()).ifPresent(versioning -> {
-			versioning.getVersions().stream().map(versionnedArtifact).filter(artifactExists)
+			versioning.getVersions().stream().map(versionedArtifact).filter(artifactExists)
 					.filter(a -> !StringUtils.equals(a.getVersion(), versioning.getRelease()))
 					.forEach(deleteArtifact.andThen(collect));
 
@@ -196,7 +205,7 @@ public class MavenRepository {
 			versions.add(a.getVersion());
 		};
 
-		final Predicate<Artifact> artifactExists = a -> artifactExists(a);
+		final Predicate<Artifact> artifactExists = this::artifactExists;
 
 		repositories.forEach(repository -> {
 			metadataResults.addAll(repositorySystem.resolveMetadata(repositorySystemSession,
@@ -226,20 +235,12 @@ public class MavenRepository {
 			throws InstallationException {
 		repositorySystem.install(repositorySystemSession, new InstallRequest().setArtifacts(Arrays.asList(artifact)));
 	}
-
+	
 	public Artifact resolveArtifact(final Artifact artifact, final List<RemoteRepository> repositories)
 			throws ArtifactResolutionException {
 		final ArtifactResult artifactResult = repositorySystem.resolveArtifact(repositorySystemSession,
 				new ArtifactRequest().setArtifact(artifact).setRepositories(repositories));
 		return artifactResult.getArtifact();
-	}
-
-	public static Artifact getArtifact(final String groupId, final String artifactId, final String version) {
-		return new DefaultArtifact(String.format("%s:%s:%s", groupId, artifactId, version));
-	}
-	
-	public static Artifact getArtifact(final String groupId, final String artifactId, final String version, String extension, String qualifier) {
-		return new DefaultArtifact(String.format("%s:%s:%s:%s:%s", groupId, artifactId, extension, qualifier, version));
 	}
 
 }

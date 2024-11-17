@@ -4,69 +4,66 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * modw configuration properties
- */
+/** modw configuration properties */
 public interface Configuration {
-	static final String MODW_PATH = ".modw";
-	static final String REPO_PATH = "repo";
+  static final String MODW_PATH = ".modw";
+  static final String REPO_PATH = "repo";
 
-	static final String PROPERTIES_FILENAME = "modw.properties";
+  static final String PROPERTIES_FILENAME = "modw.properties";
 
-	default Path modwPath() {
-		return Paths.get(System.getProperty("user.home"), MODW_PATH);
-	}
+  default Path modwPath() {
+    return Paths.get(System.getProperty("user.home"), MODW_PATH);
+  }
 
-	default Path propertiesFile() {
-		return Paths.get(modwPath().toString(), PROPERTIES_FILENAME);
-	}
+  default Path propertiesFile() {
+    return Paths.get(modwPath().toString(), PROPERTIES_FILENAME);
+  }
 
-	default Path repoPath() {
-		return Paths.get(modwPath().toString(), REPO_PATH);
-	}
+  default Path repoPath() {
+    return Paths.get(modwPath().toString(), REPO_PATH);
+  }
 
-	default String javaHome() {
-		return System.getProperty("java.home");
-	}
+  default String javaHome() {
+    return System.getProperty("java.home");
+  }
 
-	public String generate();
-	
-	public void save() throws IOException;
+  public String generate();
 
-	public String getCliGroupId();
+  public void save() throws IOException;
 
-	public String getCliArtifactId();
+  public String getCliGroupId();
 
-	public String getCliVersion();
+  public String getCliArtifactId();
 
-	public String getWrapperGroupId();
+  public String getCliVersion();
 
-	public String getWrapperArtifactId();
+  public String getWrapperGroupId();
 
-	public String getWrapperVersion();
+  public String getWrapperArtifactId();
 
-	public String getWrapperQualifier();
+  public String getWrapperVersion();
 
-	public String getRepositoryId();
+  public String getWrapperQualifier();
 
-	public String getRepositoryType();
+  public String getRepositoryId();
 
-	public String getRepositoryUrl();
+  public String getRepositoryType();
 
-	public String getRepositoryUsername();
+  public String getRepositoryUrl();
 
-	public String getRepositoryPassword();
+  public String getRepositoryUsername();
 
-	public String getProxyType();
+  public String getRepositoryPassword();
 
-	public String getProxyHost();
+  public String getProxyType();
 
-	public int getProxyPort();
+  public String getProxyHost();
 
-	public String getProxyUsername();
+  public int getProxyPort();
 
-	public String getProxyPassword();
-	
-	public String updateWrapperVersion(final String version);
+  public String getProxyUsername();
 
+  public String getProxyPassword();
+
+  public String updateWrapperVersion(final String version);
 }

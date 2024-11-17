@@ -1,8 +1,11 @@
 package com.github.modw;
 
+import static com.github.modw.ConfigurationProperties.*;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.io.IOException;
 import java.nio.file.Path;
-
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,19 +13,15 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import static com.github.modw.ConfigurationProperties.*;
-
 @TestInstance(Lifecycle.PER_CLASS)
 public interface RecordingCommandTestFixture {
+
+	static final WireMockServer wireMockServer = new WireMockServer(
+			WireMockConfiguration.options().usingFilesUnderDirectory("src/test/resources"));
 
 	void offer(final Configuration modConfiguration);
 
 	void offer(final WireMockServer wireMockServer);
-
-	static final WireMockServer wireMockServer = new WireMockServer(
-			WireMockConfiguration.options().usingFilesUnderDirectory("src/test/resources"));
 
 	@BeforeAll
 	default void setup(@TempDir Path modwPath) throws IOException {

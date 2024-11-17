@@ -1,13 +1,11 @@
 package com.github.modw.command;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
-
 import com.github.modw.*;
 import com.github.modw.maven.MavenRepository;
 import com.github.modw.maven.RemoteRepositoryFactory;
-
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactResolutionException;

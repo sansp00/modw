@@ -3,23 +3,21 @@ package com.github.modw.command;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.installation.InstallationException;
-import org.eclipse.aether.repository.RemoteRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import com.github.modw.CommandTestFixture;
 import com.github.modw.Configuration;
 import com.github.modw.maven.MavenRepository;
 import com.github.modw.maven.RemoteRepositoryFactory;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.installation.InstallationException;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class CleanTest implements CommandTestFixture {
 

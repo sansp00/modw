@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
 import org.apache.commons.io.file.PathUtils;
 
 /** modw configuration properties implementation based on basic Properties. */
@@ -99,13 +98,14 @@ public class ConfigurationProperties implements Configuration {
 		}
 		if (!properties.exists()) {
 			properties.createNewFile();
-			Files.writeString(properties.toPath(), generate());
+
+			Files.write(properties.toPath(), generate().getBytes());
 		}
 	}
 
 	public void save() throws IOException {
 		final File properties = propertiesFile().toFile();
-		Files.writeString(properties.toPath(), generate());
+		Files.write(properties.toPath(), generate().getBytes());
 	}
 
 	public String generate() {

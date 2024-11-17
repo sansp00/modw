@@ -1,12 +1,10 @@
 package com.github.modw.command;
 
-import java.io.File;
-import java.util.Collections;
-
 import com.github.modw.*;
 import com.github.modw.maven.MavenRepository;
 import com.github.modw.maven.RemoteRepositoryFactory;
-
+import java.io.File;
+import java.util.Collections;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.repository.RemoteRepository;

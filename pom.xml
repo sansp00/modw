@@ -24,12 +24,13 @@ under the License.
 
 	<groupId>com.github.modw</groupId>
 	<artifactId>modw</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 
 	<name>Moderne CLI wrapper</name>
 	<description>Moderne CLI wrapper to ease version management.</description>
 
 	<properties>
+		<revision>0.0.1-SNAPSHOT</revision>
 		<assertj.version>3.26.3</assertj.version>
 		<commons-cli.version>1.9.0</commons-cli.version>
 		<commons-io.version>2.17.0</commons-io.version>
@@ -190,18 +191,6 @@ under the License.
 							</descriptors>
 						</configuration>
 					</execution>
-					<execution>
-						<id>distribution-full</id>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<descriptors>
-								<descriptor>src/assembly/distribution-full.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -215,29 +204,22 @@ under the License.
 						</goals>
 						<phase>prepare-package</phase>
 						<configuration>ns> <includeDependency>false</includeDependency>
-							<obfuscate>
-							false</obfuscate>
-							<injar>
-							${project.build.finalName}-jar-with-dependencies.jar</injar>
-							<outjar>
-							${project.build.finalName}-pg.jar</outjar>
-							<!--
+							<obfuscate>false</obfuscate>
+							<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+							<outjar>${project.build.finalName}-pg.jar</outjar>
                             <silent>true</silent>
-                            -->
-                            <inLibsFilter>
-							!META-INF/services/**</inLibsFilter>
+                            <inLibsFilter>!META-INF/services/**</inLibsFilter>
 							<libs>
 								<lib>${java.home}/jmods/java.base.jmod</lib>
 							</libs>
 							<options>
 								<option>-keep class org.slf4j.nop.** { *; }</option>
-								<option>-keep public class
-							com.github.modw.ModWrapper {public
-									static void main(java.lang.String[]);}</option>
+								<option>-keep public class com.github.modw.ModWrapper {
+									public static void main(java.lang.String[]);
+									}</option>
 								<option>-dontwarn</option>
 								<option>-keepattributes InnerClasses</option>
-								<option>-keepclassmembers class * extends
-							java.lang.Enum {
+								<option>-keepclassmembers class * extends java.lang.Enum {
 									&lt;fields&gt;;
 									public static **[] values();
 									public static ** valueOf(java.lang.String);
@@ -257,8 +239,7 @@ under the License.
 				<version>${maven_git-commit-id-maven-plugin.version}</version>
 				<configuration>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<generateGitPropertiesFilename>
-						${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 					<includeOnlyProperties>
 						<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
 						<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
@@ -283,8 +264,7 @@ under the License.
 					<consoleOutputReporter>
 						<disable>true</disable>
 					</consoleOutputReporter>
-					<statelessTestsetInfoReporter
-						implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"></statelessTestsetInfoReporter>
+					<statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"></statelessTestsetInfoReporter>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -316,9 +296,6 @@ under the License.
 					</execution>
 				</executions>
 			</plugin>
-
-
 		</plugins>
-
 	</build>
 </project>

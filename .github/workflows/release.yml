@@ -1,0 +1,49 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+name: Release
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK 17
+        id: setup_jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$( cat version.txt )" >> "$GITHUB_OUTPUT"
+      - name: Build with Maven
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: ./mvnw -B package -Drevision=$VERSION --file pom.xml
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/modw-$VERSION-distribution.zip
+          asset_name: modw-$VERSION-distribution.zip
+          asset_content_type: application/zip

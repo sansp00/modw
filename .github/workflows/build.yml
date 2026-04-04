@@ -11,12 +11,15 @@ jobs:
       - name: Checkout code
         id: checkout
         uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK
         id: setup_jdk
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '25'
           distribution: 'temurin'
           cache: maven
+      - name: Evaluation revision
+        id: evaluate
+        uses: ./.github/actions/revision
       - name: Build with Maven
-        run: ./mvnw -B package --file pom.xml
+        run: ./mvnw -B package -Drevision=${{ steps.evaluate.outputs.version }} --file pom.xml

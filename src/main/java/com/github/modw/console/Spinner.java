@@ -1,4 +1,4 @@
-package com.github.modw;
+package com.github.modw.console;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,14 +11,15 @@ public class Spinner {
 
   public Spinner() {
     this.index = new AtomicInteger(0);
-    this.characters =  Arrays.asList("-", "\\", "|", "/");
+    //this.characters =  Arrays.asList("-", "\\", "|", "/");
+    this.characters =  Arrays.asList("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏");
   }
 
   public String display() {
     return " ";
   }
 
-  public String refresh() {
+  public String spin() {
     return String.format("\b%s", characters.get(index.getAndIncrement() % characters.size()));
   }
 

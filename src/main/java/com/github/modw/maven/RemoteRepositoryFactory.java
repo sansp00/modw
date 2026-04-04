@@ -1,82 +1,86 @@
 package com.github.modw.maven;
 
-import com.github.modw.Configuration;
-import java.util.Objects;
-import java.util.function.Supplier;
+import com.github.modw.configuration.ConfigurationProperties;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.repository.Proxy;
-import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.aether.repository.RemoteRepository.Builder;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
-public class RemoteRepositoryFactory implements Supplier<RemoteRepository> {
+public class RemoteRepositoryFactory {
 
-  final Configuration configuration;
+  private final ConfigurationProperties properties;
 
-  public RemoteRepositoryFactory(final Configuration configuration) {
-    this.configuration = configuration;
+  public RemoteRepositoryFactory(final ConfigurationProperties properties) {
+    this.properties = properties;
   }
 
-  @Override
-  public RemoteRepository get() {
-
-    final Builder builder =
-        new RemoteRepository.Builder(
-            configuration.getRepositoryId(),
-            configuration.getRepositoryType(),
-            configuration.getRepositoryUrl());
+  /**
+   * Creates a RemoteRepository instance
+   *
+   * @return RemoteRepository
+   */
+  public org.eclipse.aether.repository.RemoteRepository create() {
+    final org.eclipse.aether.repository.RemoteRepository.Builder builder =
+        new org.eclipse.aether.repository.RemoteRepository.Builder(
+            properties.repository().id(),
+            properties.repository().type(),
+            properties.repository().url());
     configureProxy(builder);
     configureAuthentication(builder);
     return builder.build();
   }
 
-  void configureAuthentication(final Builder builder) {
+  void configureAuthentication(
+      final org.eclipse.aether.repository.RemoteRepository.Builder builder) {
     if (hasAuthenticationConfiguration()) {
       Authentication authentication =
           new AuthenticationBuilder()
-              .addUsername(configuration.getRepositoryUsername())
-              .addPassword(configuration.getRepositoryPassword())
+              .addUsername(properties.repository().username().orElse(""))
+              .addPassword(properties.repository().password().orElse(""))
               .build();
 
       builder.setAuthentication(authentication);
     }
   }
 
-  void configureProxy(final Builder builder) {
+  void configureProxy(final org.eclipse.aether.repository.RemoteRepository.Builder builder) {
     Authentication authentication = null;
     Proxy proxy = null;
 
-    if (hasProxyAuthenticationConfiguration()) {
+    if (hasProxyConfiguration()) {
       authentication =
           new AuthenticationBuilder()
-              .addUsername(configuration.getProxyUsername())
-              .addPassword(configuration.getProxyPassword())
+              .addUsername(
+                  properties
+                      .proxy()
+                      .flatMap(com.github.modw.configuration.Proxy::username)
+                      .orElse(""))
+              .addPassword(
+                  properties
+                      .proxy()
+                      .flatMap(com.github.modw.configuration.Proxy::password)
+                      .orElse(""))
               .build();
     }
     if (hasProxyConfiguration()) {
       proxy =
           new Proxy(
-              configuration.getProxyType(),
-              configuration.getProxyHost(),
-              configuration.getProxyPort(),
+              properties.proxy().map(com.github.modw.configuration.Proxy::type).orElse(""),
+              properties.proxy().map(com.github.modw.configuration.Proxy::host).orElse(""),
+              properties.proxy().map(com.github.modw.configuration.Proxy::port).orElse(-1),
               authentication);
     }
     builder.setProxy(proxy);
   }
 
   boolean hasAuthenticationConfiguration() {
-    return Objects.nonNull(configuration.getRepositoryUsername())
-        && Objects.nonNull(configuration.getRepositoryPassword());
+    return properties.repository().username().isPresent();
   }
 
   boolean hasProxyConfiguration() {
-    return Objects.nonNull(configuration.getProxyType())
-        && Objects.nonNull(configuration.getProxyHost())
-        && (configuration.getProxyPort() != -1);
+    return properties.proxy().isPresent();
   }
 
   boolean hasProxyAuthenticationConfiguration() {
-    return Objects.nonNull(configuration.getProxyUsername())
-        && Objects.nonNull(configuration.getProxyPassword());
+    return properties.proxy().map(com.github.modw.configuration.Proxy::username).isPresent();
   }
 }

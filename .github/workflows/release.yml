@@ -12,21 +12,19 @@ jobs:
       - name: Checkout code
         id: checkout
         uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK
         id: setup_jdk
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '25'
           distribution: 'temurin'
           cache: maven
-      - name: Get version
-        id: get_version
-        run: echo "version=$( cat version.txt )" >> "$GITHUB_OUTPUT"
+      - name: Evaluation revision
+        id: evaluate
+        uses: ./.github/actions/revision
       - name: Build with Maven
-        env:
-          VERSION: ${{ steps.get_version.outputs.version }}
-        run: ./mvnw -B package -Drevision=$VERSION --file pom.xml
-      - name: Create Release
+        run: ./mvnw -B package -Drevision=${{ steps.evaluate.outputs.version }} --file pom.xml
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -36,14 +34,14 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload_release_asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.get_version.outputs.VERSION }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/modw-${{ steps.get_version.outputs.version }}-distribution.zip
-          asset_name: modw-${{ steps.get_version.outputs.version }}-distribution.zip
-          asset_content_type: application/zip
+#      - name: Upload release distribution asset
+#        id: upload_release_asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          VERSION: ${{ steps.get_version.outputs.VERSION }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ./target/modw-${{ steps.get_version.outputs.version }}-distribution.zip
+#          asset_name: modw-${{ steps.get_version.outputs.version }}-distribution.zip
+#          asset_content_type: application/zip

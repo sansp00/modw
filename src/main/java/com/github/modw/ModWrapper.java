@@ -1,120 +1,75 @@
 package com.github.modw;
 
-import com.github.modw.command.Available;
-import com.github.modw.command.Clean;
-import com.github.modw.command.Download;
-import com.github.modw.command.Install;
-import com.github.modw.command.Installed;
-import com.github.modw.command.Run;
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Optional;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import com.github.modw.command.*;
+import com.github.modw.configuration.ConfigurationProperties;
+import com.github.modw.configuration.ConfigurationPropertiesFactory;
+import com.github.modw.console.Console;
+import com.github.modw.maven.RemoteRepositoryFactory;
+import com.github.modw.wrapper.Configure;
+import org.apache.commons.io.output.WriterOutputStream;
+import org.eclipse.aether.repository.RemoteRepository;
+import picocli.CommandLine;
 
-public class ModWrapper {
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    final static String MODW_LOGO =
-                    "   _____  _____  ____  \n" +
-                    "  |     ||     ||    \\\n" +
-                    "  | | | ||  |  ||  |  |\n" +
-                    "  |_|_|_||_____||____/ \n" +
-                    "  | | | |              \n" +
-                    "  | | | |              \n" +
-                    "  |_____|              \n";
+@CommandLine.Command(
+    name = ModWrapper.COMMAND_NAME,
+    description = "Moderne CLI wrapper to ease version management",
+    mixinStandardHelpOptions = true,
+    subcommands = {
+      Available.class,
+      Clean.class,
+      Download.class,
+      Install.class,
+      Installed.class,
+      Run.class,
+      Configure.class
+    },
+    version = "1.0")
+public class ModWrapper implements Runnable {
+  static final String COMMAND_NAME = "modw";
 
-    public static void main(String[] args) {
-        final Configuration configuration = new ConfigurationProperties();
-        final BuildProperties buildProperties = new BuildProperties();
+  @CommandLine.Spec CommandLine.Model.CommandSpec spec;
 
-        final Options options = new Options();
-        final Option helpOption = Option.builder("help").desc("display the Wrapper usages").build();
-        final Option generateOption = Option.builder("generate")
-                .desc("generate an example Moderne CLI wrapper configuration").build();
+  @Override
+  public void run() {
+    Console.Display.logo(Constants.MODW_LOGO);
+  }
 
-        final Option downloadOption = Option.builder("download").desc("download Moderne CLI locally").build();
-        final Option installOption = Option.builder("install").desc("install Moderne CLI").build();
-        final Option installedOption = Option.builder("installed").desc("display the installed Moderne CLI versions")
-                .build();
-        final Option availableOption = Option.builder("available").desc("display the available Moderne CLI versions")
-                .build();
-        final Option cleanOption = Option.builder("clean").desc("delete the local Moderne CLI versions").build();
-        final Option versionOption = Option.builder("version").desc("Wrapper version information").build();
-
-        options.addOption(availableOption);
-        options.addOption(generateOption);
-        options.addOption(downloadOption);
-        options.addOption(installOption);
-        options.addOption(installedOption);
-        options.addOption(cleanOption);
-        options.addOption(versionOption);
-        options.addOption(helpOption);
-
-        final Option versionArg = Option.builder("v").desc("Moderne CLI version (works with -download and run)")
-                .argName("version").hasArg().build();
-        final Option fileArg = Option.builder("f").desc("Moderne CLI file (works with -install)").argName("file")
-                .hasArg().build();
-        options.addOption(versionArg);
-        options.addOption(fileArg);
-
-        int exitCode = ExitCode.OK.value();
-
-        try {
-            final CommandLineParser parser = new DefaultParser();
-            final CommandLine cmd = parser.parse(options, args, true);
-
-            if (cmd.hasOption(helpOption)) {
-                HelpFormatter.builder().get().printHelp("Usage: modw [MODW OPTIONS]... [MOD OPTIONS]...", options);
-            } else if (cmd.hasOption(generateOption)) {
-                // Generate configuration
-                System.out.printf("Example configuration file :%n%s", configuration.generate());
-            } else if (cmd.hasOption(availableOption)) {
-                // Output available version
-                exitCode = new Available(configuration).execute();
-            } else if (cmd.hasOption(installedOption)) {
-                // Output available version
-                exitCode = new Installed(configuration).execute();
-            } else if (cmd.hasOption(installOption)) {
-                // Install new version to local repository
-                if (!cmd.hasOption(versionArg) || !cmd.hasOption(fileArg)) {
-                    // Missing options
-                    System.out.println("Missing command option -v and/or -f");
-                } else {
-                    final String version = cmd.getOptionValue(versionArg);
-                    final File artifact = Paths.get(cmd.getOptionValue(fileArg)).toFile();
-                    exitCode = new Install(configuration, artifact, version).execute();
-                }
-            } else if (cmd.hasOption(downloadOption)) {
-                // Download version to local repository
-                final Optional<String> versionOpt = cmd.hasOption(versionArg)
-                        ? Optional.of(cmd.getOptionValue(versionArg))
-                        : Optional.empty();
-                exitCode = new Download(configuration, versionOpt).execute();
-            } else if (cmd.hasOption(cleanOption)) {
-                // Download version to local repository
-                exitCode = new Clean(configuration).execute();
-            } else if (cmd.hasOption(versionOption)) {
-                System.out.println(MODW_LOGO);
-                System.out.printf("* version: %s%n", buildProperties.getVersion());
-                System.out.printf("* built: %s%n", buildProperties.getBuildTime());
-            } else {
-                // Run (and download to local repository if necessary) the cli
-                final Optional<String> versionOpt = cmd.hasOption(versionArg)
-                        ? Optional.of(cmd.getOptionValue(versionArg))
-                        : Optional.empty();
-                exitCode = new Run(configuration, versionOpt).execute(cmd.getArgs());
-            }
-
-            System.exit(exitCode);
-        } catch (ParseException e) {
-            System.exit(ExitCode.MISUSE_OF_SHELL_BUILT_IN.value());
-        }
+  public static void main(String[] args) {
+    final Logger root = Logger.getLogger("");
+    root.setLevel(Level.OFF);
+    for (Handler handler : root.getHandlers()) {
+      handler.setLevel(Level.OFF);
     }
 
+    Console.setup();
 
+    int exitCode =
+        new CommandLine(new ModWrapper(), new CommandLineFactory().create())
+            .setColorScheme(Console.colorScheme())
+            .setParameterExceptionHandler(
+                (exception, arguments) -> {
+                  final CommandLine commandLine = exception.getCommandLine();
+                  Console.Display.error("Invalid input: " + commandLine);
+                  Console.Display.exception(exception);
+                  return commandLine.getCommandSpec().exitCodeOnInvalidInput();
+                })
+            .setExecutionExceptionHandler(
+                (exception, commandLine, parseResult) -> {
+                  Console.Display.error("Error executing: " + commandLine);
+                  Console.Display.exception(exception);
+                  return commandLine.getCommandSpec().exitCodeOnExecutionException();
+                })
+            .execute(args);
+
+    Console.teardown();
+    System.exit(exitCode);
+  }
 }

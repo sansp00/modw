@@ -1,38 +1,26 @@
 package com.github.modw.command;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErrAndOut;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.github.modw.CommandTestFixture;
-import com.github.modw.Configuration;
-import com.github.modw.ExitCode;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import java.util.Optional;
+import com.github.modw.CommandFixture;
+import com.github.modw.CommandHarness;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-class RunTest implements CommandTestFixture {
+class RunTest implements CommandFixture {
 
-	Configuration modConfiguration;
+  @Test
+  void call(@TempDir Path localRepository) throws Exception {
+    final CommandHarness harness = harness(localRepository);
 
-	@Test
-	void execute() throws Exception {
-
-		final Run command = new Run(modConfiguration, Optional.empty());
-
-		final String out = tapSystemErrAndOut(() -> {
-			assertThat(command.execute("-version")).isEqualTo(ExitCode.OK.value());
-			command.execute("-version");
-		});
-	}
-
-	@Override
-	public void offer(final Configuration modConfiguration) {
-		this.modConfiguration = modConfiguration;
-	}
-
-	@Override
-	public void offer(WireMockServer wireMockServer) {
-		// NoOp
-	}
-
+    final Run command =
+        new Run(harness.properties(), harness.remoteRepository(), harness.localRepository());
+    command.version = "RELEASE";
+    final String out = tapSystemOut(command::call);
+    assertThat(out).contains("Running");
+  }
 }

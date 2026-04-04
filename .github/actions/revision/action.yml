@@ -1,0 +1,75 @@
+name: "Evaluate version revision"
+description: "Determine the version revision based on branch name"
+outputs:
+  version:
+    value: ${{ steps.evaluate.outputs.version }}
+    description: 'Evaluated version revision'
+  unqualified-version:
+    value: ${{ steps.evaluate.outputs.unqualified-version }}
+    description: 'Unqualified version'
+runs:
+  using: composite
+  steps:
+    - name: Evaluate version revision
+      env:
+        WORKSPACE: ${{ github.workspace }}
+      id: evaluate
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        POM_PATH="."
+        POM_FILE="${WORKSPACE}/pom.xml"
+        BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+        SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+        DATED=$(date +"%Y%m%d.%H%M%S-1")
+        SNAPSHOT_SUFFIX="SNAPSHOT"
+        RC_SUFFIX=rc${GITHUB_RUN_NUMBER}
+
+        SANITIZED_BRANCH_NAME=$(echo "${BRANCH_NAME}" \
+          | tr '[:upper:]' '[:lower:]' \
+          | sed 's#[/_\.]#-#g' \
+          | sed 's#[^a-z0-9,-]#-#g' \
+          | sed 's#-\\+#-#g' \
+          | sed 's#^-##; s#-$##') 
+        
+
+        if ! command -v yq &> /dev/null; then
+          echo "Error: 'yq' is not installed. Exiting ..."
+          exit 1
+        fi
+
+        if [ ! -f "${POM_FILE}" ]; then
+          echo "Error: File '${POM_FILE}' not found. Exiting ..."
+          exit 1
+        fi
+        
+        prop() {
+          local property="$1"
+          local value
+        
+          value=$(yq "${property}" "${POM_FILE}")
+        
+          if [[ "${value}" =~ ^\$\{(.*)\}$ ]]; then
+            local placeholder="${BASH_REMATCH[1]}"
+            value=$(prop ".project.properties.${placeholder}")
+          fi
+          echo "${value}"
+        }
+        
+        PROJECT_VERSION=$(prop '.project.version')
+        PROJECT_UNQUALIFIED_VERSION=${PROJECT_VERSION%-*}
+        
+        if [[ "refs/heads/main" == "${GITHUB_REF}" ]]; then
+          VERSION="${PROJECT_UNQUALIFIED_VERSION}-${SNAPSHOT_SUFFIX}"
+        elif [[ "refs/tags/v*" ==  "${GITHUB_REF}" && "push" == "${GITHUB_EVENT_NAME}" ]]; then
+          VERSION="${PROJECT_VERSION}"
+        else
+          VERSION="${PROJECT_UNQUALIFIED_VERSION}-${SANITIZED_BRANCH_NAME}-${SNAPSHOT_SUFFIX}"
+        fi
+        
+        echo "version: ${VERSION}"
+        echo "unqualified-version: ${PROJECT_UNQUALIFIED_VERSION}"
+
+        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"   
+        echo "unqualified-version=${PROJECT_UNQUALIFIED_VERSION}" >> "$GITHUB_OUTPUT"   

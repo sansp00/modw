@@ -1,0 +1,28 @@
+{
+  "id" : "10af6321-bbe3-44aa-a628-237ed5eab894",
+  "name" : "org_jetbrains_dummy_0.1.2_dummy-0.1.2.jar",
+  "request" : {
+    "url" : "/org/jetbrains/dummy/0.1.2/dummy-0.1.2.jar",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "base64Body" : "UEsDBBQACAgIAAAAQQoAAAAAAAAAAAAAAAAJAAQATUVUQS1JTkYv/soAAAMAUEsHCAAAAAACAAAAAAAAAFBLAwQUAAgICAAAAEEKAAAAAAAAAAAAAAAAFAAAAG9yZy9qZXRicmFpbnMvZHVtbXkvAwBQSwcIAAAAAAIAAAAAAAAAUEsDBBQACAgIAAAAQQoAAAAAAAAAAAAAAAAfAAAAb3JnL2pldGJyYWlucy9kdW1teS9EdW1teS5jbGFzc3VRyU4CQRB9LcswIwqCgIjLqBf04FxMPGC8aDyhkkC4eGqgA01mIU1jwmfpQRMPfoAfZaweTIgJTjr1Uq+2VzVf3x+fAC5w4iCNko0yKhnsOKhi10LNwh5D+kqGUl8zJOqnXYbkTTQQDLmmDMXDLOgJ1eE9n5hCM+pzv8uVNP4vmdQjOWWoNSM19MZC9xSX4dQbzIJg7t0a26CkgEiGcv2pOebP3PN5OPTaWslw2IhHcjWkJsUVYYb8vdCjaNDiigdCC0WJTjuaqb64k0aBE085N5VZWMhY2M/iAIcMlQ5pc+lxN9bjTlQ0Fn1twc3iCMcM1X9V09yllseeKftDtedTLQK6WTSjQGkhXEZei1Rr0i54QNqLK2gGa2I8ny5Sqq86CGlL0d8y3xqY2YmsTZ5HyAhTZ+9gL3HYIZuOyQTWyWYXCYQbhDY2kaMsU3wZNyPuFWuFxBuSywYOoSnKUKtlExt5bBEWTIyWJ6CN4qLtH1BLBwh3ooI+cQEAAFgCAABQSwECFAAUAAgICAAAAEEKAAAAAAIAAAAAAAAACQAEAAAAAAAAAAAAAAAAAAAATUVUQS1JTkYv/soAAFBLAQIUABQACAgIAAAAQQoAAAAAAgAAAAAAAAAUAAAAAAAAAAAAAAAAAD0AAABvcmcvamV0YnJhaW5zL2R1bW15L1BLAQIUABQACAgIAAAAQQp3ooI+cQEAAFgCAAAfAAAAAAAAAAAAAAAAAIEAAABvcmcvamV0YnJhaW5zL2R1bW15L0R1bW15LmNsYXNzUEsFBgAAAAADAAMAygAAAD8CAAAAAA==",
+    "headers" : {
+      "Accept-Ranges" : "bytes",
+      "X-Checksum-SHA1" : "c5f6632d0e67a041bb748212f1ae2c0017a86b20",
+      "CF-Cache-Status" : "MISS",
+      "Server" : "cloudflare",
+      "CF-Ray" : "a01839fdea73ebb8-YYZ",
+      "ETag" : "\"2015b5e5e639ac241aaf6acfb9b0ecc0\"",
+      "X-Checksum-MD5" : "2015b5e5e639ac241aaf6acfb9b0ecc0",
+      "Last-Modified" : "Wed, 19 May 2021 14:02:29 GMT",
+      "alt-svc" : "h3=\":443\"; ma=86400",
+      "Date" : "Mon, 25 May 2026 23:12:43 GMT",
+      "Content-Type" : "application/java-archive"
+    }
+  },
+  "uuid" : "10af6321-bbe3-44aa-a628-237ed5eab894",
+  "persistent" : true,
+  "insertionIndex" : 4
+}

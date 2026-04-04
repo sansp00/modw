@@ -11,9 +11,9 @@ public enum ExitCode {
   FATAL_ERROR_SIGNAL(128),
   UNDEF(-1);
 
-  private final int value;
+  final int value;
 
-  private ExitCode(final int value) {
+  ExitCode(final int value) {
     this.value = value;
   }
 

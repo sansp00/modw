@@ -1,40 +1,24 @@
 package com.github.modw.command;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.github.modw.CommandTestFixture;
+import com.github.modw.CommandFixture;
+import com.github.modw.CommandHarness;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.github.modw.Configuration;
-import com.github.tomakehurst.wiremock.WireMockServer;
-
-class AvailableTest implements CommandTestFixture {
-
-  Configuration modConfiguration;
+class AvailableTest implements CommandFixture {
 
   @Test
-  void execute() throws Exception {
-    final Available command = new Available(modConfiguration);
-    final String out =
-        tapSystemOut(
-            () -> {
-              command.execute();
-            });
+  void call(@TempDir Path localRepository) throws Exception {
+    final CommandHarness harness = harness(localRepository);
 
-    command.execute();
-    System.out.println(out);
-    assertThat(out).contains("1.18.34");
-  }
-
-  @Override
-  public void offer(Configuration modConfiguration) {
-    this.modConfiguration = modConfiguration;
-  }
-
-  @Override
-  public void offer(WireMockServer wireMockServer) {
-    // TODO Auto-generated method stub
-
+    final Available command =
+        new Available(harness.properties(), harness.remoteRepository(), harness.localRepository());
+    command.filter = "NONE";
+    final String out = tapSystemOut(command::call);
+    assertThat(out).contains(availableVersions());
   }
 }

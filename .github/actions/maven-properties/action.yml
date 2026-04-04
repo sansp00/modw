@@ -1,0 +1,60 @@
+name: "Maven properties"
+description: "Extract GAV from Maven pom file"
+outputs:
+  group-id:
+    value: ${{ steps.extract.outputs.group-id }}
+    description: 'Artifact group id'
+  artifact-id:
+    value: ${{ steps.extract.outputs.artifact-id }}
+    description: 'Artifact artifact id'
+  version:
+    value: ${{ steps.extract.outputs.version }}
+    description: 'Artifact artifact version'
+runs:
+  using: composite
+  steps:
+    - name: Extract Maven properties
+      env:
+        WORKSPACE: ${{ github.workspace }}
+      id: extract
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        POM_PATH="."
+        POM_FILE="${WORKSPACE}/pom.xml"
+
+        if ! command -v yq &> /dev/null; then
+          echo "Error: 'yq' is not installed. Exiting ..."
+          exit 1
+        fi
+
+        if [ ! -f ${POM_FILE} ]; then
+          echo "Error: File '${POM_FILE}' not found. Exiting ..."
+          exit 1
+        fi
+        
+        prop() {
+          local property="$1"
+          local value
+        
+          value=$(yq "${property} ${POM_FILE}
+        
+          if [[ "${value}" =~ ^\$\{(.*)\}$ ]]; then
+            local placeholder="${BASH_REMATCH(1)}"
+            value=$(prop .project.properties.${placeholder})
+          fi
+          echo "${value}
+        }
+        
+        ARTIFACT_ID=${prop '.project.artifactId'}
+        GROUP_ID=${prop '.project.groupId'}
+        VERSION=${prop '.project.version'}
+        
+        echo "group-id: ${GROUP_ID}"
+        echo "artifact-id: ${ARTIFACT_ID}"
+        echo "version: ${VERSION}"
+
+        echo "group-id=${GROUP_ID}" >> "$GITHUB_OUTPUT"
+        echo "artifact-id=${ARTIFACT_ID}" >> "$GITHUB_OUTPUT"   
+        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"   

@@ -1,45 +1,94 @@
 package com.github.modw.command;
 
 import com.github.modw.*;
+import com.github.modw.Constants;
+import com.github.modw.configuration.Cli;
+import com.github.modw.configuration.ConfigurationProperties;
+import com.github.modw.configuration.ConfigurationPropertiesFactory;
+import com.github.modw.console.Console;
 import com.github.modw.maven.MavenRepository;
 import com.github.modw.maven.RemoteRepositoryFactory;
+
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
+import picocli.CommandLine;
 
-public class Download implements Command {
+@CommandLine.Command(
+    name = Download.COMMAND_NAME,
+    description = "Download Moderne CLI to local repository")
+@com.github.modw.CommandLine
+public class Download implements Callable<Integer> {
+  static final String COMMAND_NAME = "download";
 
-	final Configuration configuration;
-	final RemoteRepositoryFactory remoteRepositorySupplier;
-	final Optional<String> cliVersion;
+  @CommandLine.Spec CommandLine.Model.CommandSpec spec;
 
-	public Download(final Configuration configuration, final Optional<String> cliVersion) {
-		this.configuration = configuration;
-		this.remoteRepositorySupplier = new RemoteRepositoryFactory(configuration);
-		this.cliVersion = cliVersion;
-	}
+  @CommandLine.Option(
+      names = {"-v", "--version"},
+      defaultValue = "RELEASE",
+      description = "Specific version to download")
+  String version;
 
-	public int execute(final String... args) {
-		System.out.println("Executing command [download]");
-		try {
-			final Artifact cliArtifact = MavenRepository.getArtifact(configuration.getCliGroupId(),
-					configuration.getCliArtifactId(), cliVersion.orElse(configuration.getCliVersion()));
+  @CommandLine.Option(
+      names = {"-p", "--persist"},
+      defaultValue = "false",
+      description = "Persist the downloaded version")
+  boolean persist;
 
-			final RemoteRepository cliRepository = remoteRepositorySupplier.get();
+  final ConfigurationProperties properties;
+  final RemoteRepository remoteRepository;
+  final MavenRepository localRepository;
 
-			final Artifact resolved = new MavenRepository(configuration.repoPath()).resolveArtifact(cliArtifact,
-					Collections.singletonList(cliRepository));
+  public Download(
+      final ConfigurationProperties properties,
+      final RemoteRepository remoteRepository,
+      final MavenRepository localRepository) {
+    this.properties = properties;
+    this.remoteRepository = remoteRepository;
+    this.localRepository = localRepository;
+  }
 
-			System.out.printf("Artifact resolved/downloaded %s:%s:%s => %s%n", resolved.getGroupId(),
-					resolved.getArtifactId(), resolved.getVersion(), resolved.getFile());
+  @Override
+  public Integer call() {
+    Console.Display.command(COMMAND_NAME);
 
-		} catch (ArtifactResolutionException e) {
-			System.out.println("Artifact unresolved");
-			System.out.printf("Error: %s%n", e);
-			return ExitCode.GENERAL_ERROR.value();
-		}
-		return ExitCode.OK.value();
-	}
+    try {
+      final Artifact cliArtifact =
+          MavenRepository.artifactFor(
+              properties.cli().groupId(), properties.cli().artifactId(), version);
+
+      final Artifact resolved =
+          localRepository.resolve(cliArtifact, Collections.singletonList(remoteRepository));
+
+      if (persist) {
+        ConfigurationPropertiesFactory.store(
+            new ConfigurationProperties(
+                new Cli(resolved.getGroupId(), resolved.getArtifactId(), resolved.getVersion()),
+                properties.proxy(),
+                properties.repository(),
+                properties.wrapper()));
+      }
+
+      final String result =
+          "%s:%s:%s => %s (persisted=%s)"
+              .formatted(
+                  resolved.getGroupId(),
+                  resolved.getArtifactId(),
+                  resolved.getVersion(),
+                  resolved.getFile(),
+                  Boolean.toString(persist));
+      Console.Display.result("Artifact resolved/downloaded", result);
+
+      return ExitCode.OK.value();
+    } catch (ArtifactResolutionException e) {
+      Console.Display.error("Artifact unresolved");
+      Console.Display.exception(e);
+      return ExitCode.GENERAL_ERROR.value();
+    }
+  }
 }

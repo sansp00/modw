@@ -1,67 +1,24 @@
 package com.github.modw.command;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.github.modw.CommandTestFixture;
-import com.github.modw.Configuration;
-import com.github.modw.maven.MavenRepository;
-import com.github.modw.maven.RemoteRepositoryFactory;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import java.io.File;
-import java.nio.file.Files;
+import com.github.modw.CommandFixture;
+import com.github.modw.CommandHarness;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.installation.InstallationException;
-import org.eclipse.aether.repository.RemoteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class CleanTest implements CommandTestFixture {
+class CleanTest implements CommandFixture {
 
-	Configuration modConfiguration;
+  @Test
+  void call(@TempDir Path localRepository) throws Exception {
+    final CommandHarness harness = harness(localRepository);
 
-	@Test
-	void execute(@TempDir Path artifactPath) throws Exception {
-		final Clean command = new Clean(modConfiguration);
+    final Clean command =
+        new Clean(harness.properties(), harness.remoteRepository(), harness.localRepository());
 
-		final Path artifact = Paths.get(artifactPath.toString(), "artifact.jar");
-		Files.createFile(artifact);
-
-		installArtifact(artifact.toFile(), "1.0.0");
-		installArtifact(artifact.toFile(), "2.0.0");
-
-		final String out = tapSystemOut(() -> {
-			command.execute();
-		});
-
-		System.out.println(out);
-		assertThat(modConfiguration.repoPath()).isDirectoryRecursivelyContaining("glob:**lombok-2.0.0.jar");
-		assertThat(modConfiguration.repoPath()).isDirectoryNotContaining("glob:**lombok-1.0.0.jar");
-		assertThat(out).contains("1.0.0");
-	}
-
-	@Override
-	public void offer(Configuration modConfiguration) {
-		this.modConfiguration = modConfiguration;
-	}
-
-	@Override
-	public void offer(WireMockServer wireMockServer) {
-		// TODO Auto-generated method stub
-
-	}
-
-	void installArtifact(final File file, final String version) throws InstallationException {
-		final RemoteRepository remoteRepository = new RemoteRepositoryFactory(modConfiguration).get();
-		final Artifact cliArtifact = MavenRepository
-				.getArtifact(modConfiguration.getCliGroupId(), modConfiguration.getCliArtifactId(), version)
-				.setFile(file);
-
-		new MavenRepository(modConfiguration.repoPath()).installArtifact(cliArtifact,
-				Collections.singletonList(remoteRepository));
-	}
-
+    final String out = tapSystemOut(command::call);
+    assertThat(out).contains("∅");
+  }
 }

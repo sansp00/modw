@@ -1,42 +1,25 @@
 package com.github.modw.command;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import java.util.Optional;
-
-import com.github.modw.CommandTestFixture;
+import com.github.modw.CommandFixture;
+import com.github.modw.CommandHarness;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.github.modw.Configuration;
-import com.github.tomakehurst.wiremock.WireMockServer;
-
-class DownloadTest implements CommandTestFixture {
-
-  Configuration modConfiguration;
+class DownloadTest implements CommandFixture {
 
   @Test
-  void execute() throws Exception {
-    final Download command = new Download(modConfiguration, Optional.empty());
+  void call(@TempDir Path localRepository) throws Exception {
+    final CommandHarness harness = harness(localRepository);
 
-    final String out =
-        tapSystemOut(
-            () -> {
-              command.execute();
-            });
+    final Download command =
+        new Download(harness.properties(), harness.remoteRepository(), harness.localRepository());
+    command.version = "RELEASE";
+    final String out = tapSystemOut(command::call);
 
-    System.out.println(out);
-    assertThat(modConfiguration.repoPath())
-        .isDirectoryRecursivelyContaining("glob:**lombok-1.18.34.jar");
-  }
-
-  @Override
-  public void offer(final Configuration modConfiguration) {
-    this.modConfiguration = modConfiguration;
-  }
-
-  @Override
-  public void offer(WireMockServer wireMockServer) {
-    // NoOp
+    assertThat(out).contains(releaseVersion());
   }
 }

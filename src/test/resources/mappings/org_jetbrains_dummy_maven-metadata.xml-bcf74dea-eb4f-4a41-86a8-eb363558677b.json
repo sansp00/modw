@@ -1,0 +1,27 @@
+{
+  "id" : "bcf74dea-eb4f-4a41-86a8-eb363558677b",
+  "name" : "org_jetbrains_dummy_maven-metadata.xml",
+  "request" : {
+    "url" : "/org/jetbrains/dummy/maven-metadata.xml",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<metadata>\n  <groupId>org.jetbrains</groupId>\n  <artifactId>dummy</artifactId>\n  <versioning>\n    <latest>0.1.2</latest>\n    <release>0.1.2</release>\n    <versions>\n      <version>0.1.0</version>\n      <version>0.1.1</version>\n      <version>0.1.2</version>\n    </versions>\n    <lastUpdated>20210519140320</lastUpdated>\n  </versioning>\n</metadata>\n",
+    "headers" : {
+      "X-Checksum-SHA1" : "84f393ae8aa6715fa189d1a577a1180015c34d6f",
+      "CF-Cache-Status" : "REVALIDATED",
+      "Server" : "cloudflare",
+      "CF-Ray" : "a01839f7ab58ac45-YYZ",
+      "ETag" : "W/\"277902f3c93c45aaaa2afab47508cc69\"",
+      "X-Checksum-MD5" : "277902f3c93c45aaaa2afab47508cc69",
+      "Last-Modified" : "Wed, 19 May 2021 14:03:21 GMT",
+      "alt-svc" : "h3=\":443\"; ma=86400",
+      "Date" : "Mon, 25 May 2026 23:12:42 GMT",
+      "Content-Type" : "text/xml"
+    }
+  },
+  "uuid" : "bcf74dea-eb4f-4a41-86a8-eb363558677b",
+  "persistent" : true,
+  "insertionIndex" : 6
+}
